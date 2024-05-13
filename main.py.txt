@@ -1,0 +1,62 @@
+from time import sleep
+import RPi.GPIO as GPIO
+import smtplib
+GPIO.setmode(GPIO.BOARD)
+press=16
+run=18
+temp=22
+smtpUser='name@gmail.com'
+smtpPass='password'
+toAdd='other@gmail.com'
+fromAdd=smtpUser
+
+pressSubject='Pressure Tripped!'
+pressHeader='To: ' + toAdd + '\n' + 'From: ' + fromAdd + '\n' + 'Subject: ' +  pressSubject
+pressBody='Check pumphouse, pressure sensor tripped!'
+
+runSubject='Pump Sensor Tripped!'
+runHeader='To: ' + toAdd + '\n' + 'From: ' + fromAdd + '\n' + 'Subject: ' + runSubject
+runBody='Check pumphouse, pump sensor tripped!'
+
+tempSubject='Temperature Tripped!'
+tempHeader='To: ' + toAdd + '\n' + 'From: ' + fromAdd + '\n' + 'Subject: ' + tempSubject
+tempBody='Check pumphouse, temperature sensor tripped!'
+
+GPIO.setup(press,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+GPIO.setup(run,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+GPIO.setup(temp,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+
+while(1):
+ 
+	if GPIO.input(press)==0:
+		print pressHeader + '\n' + pressBody
+		s=smtplib.SMTP('smtp.gmail.com',587)
+		s.ehlo()
+		s.starttls()
+		s.ehlo()
+		s.login(smtpUser, smtpPass)
+		s.sendmail(fromAdd, toAdd,  pressHeader + '\n\n' + pressBody)
+		s.quit
+		sleep(10)
+	
+	if GPIO.input(run)==0:
+		print runHeader + '\n' + runBody
+		s=smtplib.SMTP('smtp.gmail.com',587)
+		s.ehlo()
+		s.starttls()
+		s.ehlo()
+		s.login(smtpUser, smtpPass)
+		s.sendmail(fromAdd, toAdd,  runHeader + '\n\n' + tempBody)
+		s.quit
+		sleep(10)
+		
+	if GPIO.input(temp)==0:
+		print tempHeader + '\n' + tempBody
+		s=smtplib.SMTP('smtp.gmail.com',587)
+		s.ehlo()
+		s.starttls()
+		s.ehlo()
+		s.login(smtpUser, smtpPass)
+		s.sendmail(fromAdd, toAdd,  tempHeader + '\n\n' + tempBody)
+		s.quit
+		sleep(10)
