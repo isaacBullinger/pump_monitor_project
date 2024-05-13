@@ -1,0 +1,1 @@
+A project I made to monitor a pumphouse. The program runs on a Raspberry Pi located in the pumphouse. The Raspberry Pi has 3 sensors connected to it, one for pump pressure, one for temperature, and one ensuring that the pump was running. It sends emails to a specified account with information about the sensor that trips so that repairs can be made before damage.
